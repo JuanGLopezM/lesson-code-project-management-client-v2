@@ -4,44 +4,49 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5005";
 
-function EditProjectPage(props) {
+function EditTaskPage(props) {   
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const { projectId } = useParams();
+  const [description, setDescription] = useState("");  
+  const { taskId } = useParams();
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     axios
-      .get(`${API_URL}/api/projects/${projectId}`)
+      .get(`${API_URL}/api/projects/task/${taskId}`)
       .then((response) => {
-        const oneProject = response.data;
-        setTitle(oneProject.title);
-        setDescription(oneProject.description);
+        const oneTask = response.data;
+        setTitle(oneTask.title);
+        setDescription(oneTask.description);
       })
       .catch((error) => console.log(error));
-  }, [projectId]);
-
+    
+  }, [taskId]);
+  
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const requestBody = { title, description };
     axios
-      .put(`${API_URL}/api/projects/${projectId}`, requestBody)
+      .put(`${API_URL}/api/tasks/${taskId}`, requestBody)
       .then((response) => {
-        navigate(`/projects/${projectId}`)
+        navigate(`/projects`)
       });
   };
   
-  const deleteProject = () => {
+  
+  const deleteTask = () => {
     axios
-      .delete(`${API_URL}/api/projects/${projectId}`)
+      .delete(`${API_URL}/api/tasks/${taskId}`)
       .then(() => {
-        navigate("/projects");
+        navigate(`projects/${taskId}`);
       })
       .catch((err) => console.log(err));
-  };
+  };  
+
+  
   return (
     <div className="EditProjectPage">
-      <h3>Edit the Project</h3>
+      <h3>Edit the Task</h3>
+
       <form onSubmit={handleFormSubmit}>
         <label>Title:</label>
         <input
@@ -50,16 +55,20 @@ function EditProjectPage(props) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
+        
         <label>Description:</label>
         <textarea
           name="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <button type="submit">Update Project</button>
+
+        <button type="submit">Update Task</button>
       </form>
-      <button onClick={deleteProject}>Delete Project</button>
+
+      <button onClick={deleteTask}>Delete Task</button>
     </div>
   );
 }
-export default EditProjectPage;
+
+export default EditTaskPage;

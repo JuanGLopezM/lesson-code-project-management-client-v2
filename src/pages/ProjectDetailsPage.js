@@ -16,15 +16,16 @@ function ProjectDetailsPage (props) {
     axios
       .get(`${API_URL}/api/projects/${projectId}`)
       .then((response) => {
-      	const oneProject = response.data;
-      	setProject(oneProject);
+      	const oneTask = response.data;
+      	setProject(oneTask);
     	})
       .catch((error) => console.log(error));
   };
   
   
   useEffect(()=> {
-    getProject();
+    getProject();    
+          // eslint-disable-next-line
   }, [] );
 
   
@@ -41,7 +42,10 @@ function ProjectDetailsPage (props) {
       
       <AddTask refreshProject={getProject} projectId={projectId} />          
 
-      { project && project.tasks.map((task) => <TaskCard key={task._id} {...task} /> )} 
+      { project && project.tasks
+      .map((task) => 
+      <TaskCard key={task._id} {...task} />
+       )} 
 
       <Link to="/projects">
         <button>Back to projects</button>
